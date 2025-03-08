@@ -1,0 +1,137 @@
+{% extends 'odontologia_app/base.html' %}
+
+{% block title %}Crear Paciente{% endblock %}
+{% load static %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crear Paciente</title>
+    <link href="{% static 'bootstrap.min.css' %}" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">Crear Nuevo Paciente</h1>
+        <form method="post" class="card p-4 shadow">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="cedula" class="form-label">Cédula:</label>
+                <input type="text" id="cedula" name="cedula" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label for="cedula_representante" class="form-label">Cedula del Representante:</label>
+                <div class="input-group">
+                    <input type="text" id="cedula_representante" name="cedula_representante" class="form-control">
+                    <button type="button" class="btn btn-secondary" onclick="dejarComoNulo()">Dejar como Nulo</button>
+                    <button type="button" class="btn btn-info" onclick="toggleCrearRepresentante()">Crear Representante</button>
+                </div>
+            </div>
+
+            <div id="crearRepresentanteSection" style="display: none;">
+                <div class="mb-3">
+                    <label for="cedula_representante_crear" class="form-label">Registrar Cedula del Representante:</label>
+                    <input type="text" id="cedula_representante_crear" name="cedula_representante_crear" class="form-control">
+                </div>
+                <div class="mb-3">
+                    <label for="nombre_representante_crear" class="form-label">Nombre del Representante:</label>
+                    <input type="text" id="nombre_representante_crear" name="nombre_representante_crear" class="form-control">
+                </div>
+                <button type="button" class="btn btn-primary mb-3" onclick="crearRepresentante()">Guardar Representante</button>
+            </div>
+
+            <div class="mb-3">
+                <label for="nombre" class="form-label">Nombre:</label>
+                <input type="text" id="nombre" name="nombre" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label for="edad" class="form-label">Edad:</label>
+                <input type="number" id="edad" name="edad" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label for="telefono" class="form-label">Teléfono:</label>
+                <input type="text" id="telefono" name="telefono" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label for="sexo" class="form-label">Sexo:</label>
+                <select id="sexo" name="sexo" class="form-select" required>
+                    <option value="M">Masculino</option>
+                    <option value="F">Femenino</option>
+                    <option value="O">Otro</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="estado_civil" class="form-label">Estado Civil:</label>
+                <select id="estado_civil" name="estado_civil" class="form-select" required>
+                    <option value="true">Casado</option>
+                    <option value="false">Soltero</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="ocupacion" class="form-label">Ocupación:</label>
+                <input type="text" id="ocupacion" name="ocupacion" class="form-control" required>
+            </div>
+
+            <button type="submit" class="btn btn-success">Crear Paciente</button>
+        </form>
+
+        <br>
+        <a href="{% url 'lista_pacientes' %}" class="btn btn-outline-secondary">Volver a la lista de pacientes</a>
+    </div>
+
+    <script src="{% static 'popper.min.js' %}"></script>
+    <script src="{% static 'bootstrap.min.js' %}"></script>
+
+    <script>
+        function dejarComoNulo() {
+            document.getElementById('cedula_representante').value = '';
+        }
+
+        function crearRepresentante() {
+            const cedula = document.getElementById('cedula_representante_crear').value;
+            const nombre = document.getElementById('nombre_representante_crear').value;
+
+            if (!cedula || !nombre) {
+                alert('Por favor, complete todos los campos.');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('cedula', cedula);
+            formData.append('nombre', nombre);
+
+            fetch('{% url "crear_representante" %}', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}', 
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    document.getElementById('cedula_representante').value = cedula;
+                    alert('Representante creado correctamente.');
+                } else {
+                    alert('Error al crear el representante: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error al crear el representante');
+            });
+        }
+
+        function toggleCrearRepresentante() {
+            const section = document.getElementById('crearRepresentanteSection');
+            if (section.style.display === 'none') {
+                section.style.display = 'block';
+            } else {
+                section.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>
+{% endblock %}

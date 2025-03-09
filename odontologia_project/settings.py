@@ -79,14 +79,15 @@ AUTH_USER_MODEL = 'odontologia_app.Usuario'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 LOGIN_REDIRECT_URL = '/principal'
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        "NAME": "Doctora",
-        "USER": "postgres",
-        "PASSWORD": "123456jos",
-        "HOST": "localhost",
-        "PORT": "5432",
+        "NAME": os.getenv("DB_NAME", "doctora"),
+        "USER": os.getenv("DB_USER", "josmar"),
+        "PASSWORD": os.getenv("DB_PASSWORD", "6NAOqaQkrkksENSefywtrvtbA5VzWOFr"),
+        "HOST": os.getenv("DB_HOST", "dpg-cv6gv3l6l47c73d88br0-a"),
+        "PORT": os.getenv("DB_PORT", "5432"),
     }
 }
 # Password validation

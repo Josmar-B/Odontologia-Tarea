@@ -3,13 +3,9 @@ from django.http import JsonResponse
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-import requests
 from .models import *
 from .forms import *
 from django.views.decorators.csrf import csrf_exempt
-
-# URL base de la API de PostgREST
-API_BASE_URL = 'https://postgrest-service.onrender.com'
 
 def principal(request):
     return render(request, 'odontologia_app/principal.html')
@@ -47,60 +43,20 @@ def inicio(request):
     return render(request, 'odontologia_app/inicio.html')
 
 def eliminar_paciente(request, id):
-    url = f'{API_BASE_URL}/paciente?id=eq.{id}'  # URL de la API para eliminar un paciente
-    
-    response = requests.delete(url)
-    
-    if response.status_code == 204:
-        return redirect('lista_pacientes')
-    else:
-        print("Error de la API:", response.status_code, response.text)
-        return JsonResponse({'error': 'No se pudo eliminar el paciente'}, status=500)
+    paciente = get_object_or_404(Paciente, id=id)
+    paciente.delete()
+    return redirect('lista_pacientes')
 
 def lista_pacientes(request):
-    url = f'{API_BASE_URL}/paciente'  # URL de la API para obtener la lista de pacientes
+    pacientes = Paciente.objects.all()  # Obtener todos los pacientes desde la base de datos
+    query = request.GET.get('q')
     
-    response = requests.get(url)
+    if query:
+        pacientes = pacientes.filter(nombre__icontains=query) | pacientes.filter(cedula__icontains=query)
     
-    if response.status_code == 200:
-        pacientes = response.json()  
-        query = request.GET.get('q')
-        
-        if query:
-            pacientes = [p for p in pacientes if query.lower() in p['nombre'].lower() or query in p['cedula']]
-        
-        return render(request, 'odontologia_app/lista_pacientes.html', {'pacientes': pacientes})
-    else:
-        return JsonResponse({'error': 'No se pudieron obtener los pacientes'}, status=500)
+    return render(request, 'odontologia_app/lista_pacientes.html', {'pacientes': pacientes})
 
 def crear_paciente(request):
-    if request.method == 'POST':
-        datos = {
-            'cedula': request.POST.get('cedula'),
-            'nombre': request.POST.get('nombre'),  # Nuevo campo "Nombre"
-            'cedula_representante': request.POST.get('cedula_representante') or None,
-            'edad': int(request.POST.get('edad')),
-            'telefono': request.POST.get('telefono'),
-            'sexo': request.POST.get('sexo'),
-            'estado_civil': request.POST.get('estado_civil') == 'true',
-            'ocupacion': request.POST.get('ocupacion'),
-        }
-        
-        url = f'{API_BASE_URL}/paciente'  # URL de la API para crear un paciente
-        
-        response = requests.post(url, json=datos)
-
-        if response.status_code == 201:
-            return redirect('lista_pacientes')  
-        else:
-            print("Error de la API:", response.status_code, response.text)
-            return JsonResponse({'error': 'No se pudo crear el paciente'}, status=500)
-    else:
-        return render(request, 'odontologia_app/crear_paciente.html')
-
-def editar_paciente(request, id):
-    url = f'{API_BASE_URL}/paciente?id=eq.{id}'  # URL de la API para obtener y actualizar un paciente
-    
     if request.method == 'POST':
         datos = {
             'cedula': request.POST.get('cedula'),
@@ -113,20 +69,28 @@ def editar_paciente(request, id):
             'ocupacion': request.POST.get('ocupacion'),
         }
         
-        response = requests.patch(url, json=datos)
-
-        if response.status_code == 204:
-            return redirect('lista_pacientes')
-        else:
-            print("Error de la API:", response.status_code, response.text)
-            return JsonResponse({'error': 'No se pudo actualizar el paciente'}, status=500)
+        # Crear un nuevo paciente en la base de datos
+        Paciente.objects.create(**datos)
+        return redirect('lista_pacientes')
     else:
-        response = requests.get(url)
-        if response.status_code == 200:
-            paciente = response.json()[0]  # Obtener el primer paciente de la lista
-            return render(request, 'odontologia_app/editar_paciente.html', {'paciente': paciente})
-        else:
-            return JsonResponse({'error': 'No se pudo obtener el paciente'}, status=500)
+        return render(request, 'odontologia_app/crear_paciente.html')
+
+def editar_paciente(request, id):
+    paciente = get_object_or_404(Paciente, id=id)
+    
+    if request.method == 'POST':
+        paciente.cedula = request.POST.get('cedula')
+        paciente.nombre = request.POST.get('nombre')
+        paciente.cedula_representante = request.POST.get('cedula_representante')
+        paciente.edad = int(request.POST.get('edad'))
+        paciente.telefono = request.POST.get('telefono')
+        paciente.sexo = request.POST.get('sexo')
+        paciente.estado_civil = request.POST.get('estado_civil') == 'true'
+        paciente.ocupacion = request.POST.get('ocupacion')
+        paciente.save()
+        return redirect('lista_pacientes')
+    else:
+        return render(request, 'odontologia_app/editar_paciente.html', {'paciente': paciente})
 
 def crear_historia_medica(request):
     if request.method == 'POST':
@@ -147,9 +111,9 @@ def crear_anamnesis(request, historia_id):
         form = AnamnesisForm(request.POST)
         if form.is_valid():
             anamnesis = form.save(commit=False)
-            anamnesis.historia_medica = historia_medica  # Asignar la historia médica recién creada
+            anamnesis.historia_medica = historia_medica
             anamnesis.save()
-            return redirect('completar_anamnesis', anamnesis_id=anamnesis.id)  # Redirigir a la lista de historias médicas
+            return redirect('completar_anamnesis', anamnesis_id=anamnesis.id)
     else:
         form = AnamnesisForm()
     return render(request, 'odontologia_app/crear_anamnesis.html', {'form': form, 'historia_medica': historia_medica})

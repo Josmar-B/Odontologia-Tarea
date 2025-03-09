@@ -13,7 +13,11 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 from pathlib import Path
 import os
 
-
+ALLOWED_HOSTS = [
+    'odontologia-tarea.onrender.com',  # Dominio de Render.com
+    'localhost',                      # Para desarrollo local
+    '127.0.0.1',                     # Para desarrollo local
+]
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -28,7 +32,7 @@ SECRET_KEY = 'django-insecure-+q3yd)ft+@^3l473b+0n!t%%m7fuqh&bn=s%9o%j-ual_pm#j0
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+
 
 
 # Application definition

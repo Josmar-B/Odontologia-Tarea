@@ -25,11 +25,11 @@ class LoginForm(forms.Form):
 class AnamnesisForm(forms.ModelForm):
     class Meta:
         model = Anamnesis
-        fields = [
-            'diabetes', 'tbc', 'hipertension', 'artritis', 'alergias', 'neuralgias',
-            'hemorragias', 'hepatitis', 'sinusitis', 'trastorno_mentales',
-            'enfermedades_eruptivas', 'enfermedades_renales', 'parotiditis'
-        ]
+        fields = ['diabetes', 'tbc', 'hipertension', 'artritis', 'alergias', 
+                  'neuralgias', 'hemorragias', 'hepatitis', 'sinusitis', 
+                  'trastornos_mentales', 'enfermedades_eruptivas', 
+                  'enfermedades_renales', 'parotiditis']
+
 
 class AntecedentesFamiliaresForm(forms.ModelForm):
     class Meta:

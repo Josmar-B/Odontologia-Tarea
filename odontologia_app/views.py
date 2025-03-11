@@ -5,15 +5,19 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .models import *
 from .forms import *
-from django.views.decorators.csrf import csrf_exempt
+from django.shortcuts import render
+from django.views.decorators.csrf import csrf_protect
 
+@csrf_protect
 def principal(request):
     return render(request, 'odontologia_app/principal.html')
-
+    
+@csrf_protect
 def cerrar_sesion(request):
     logout(request)
     return redirect('inicio')
-
+    
+@csrf_protect
 def inicio_sesion(request):
     if request.method == 'POST':
         email = request.POST.get('email')  
@@ -28,6 +32,8 @@ def inicio_sesion(request):
             messages.error(request, 'Correo electrónico o contraseña incorrectos.')
     return render(request, 'odontologia_app/inicio_sesion.html')
 
+
+@csrf_protect
 def registro(request):
     if request.method == 'POST':
         form = RegistroForm(request.POST)
@@ -39,14 +45,17 @@ def registro(request):
         form = RegistroForm()
     return render(request, 'odontologia_app/registro.html', {'form': form})
 
+@csrf_protect
 def inicio(request):
     return render(request, 'odontologia_app/inicio.html')
 
+@csrf_protect
 def eliminar_paciente(request, id):
     paciente = get_object_or_404(Paciente, id=id)
     paciente.delete()
     return redirect('lista_pacientes')
 
+@csrf_protect
 def lista_pacientes(request):
     pacientes = Paciente.objects.all()  # Obtener todos los pacientes desde la base de datos
     query = request.GET.get('q')
@@ -56,6 +65,7 @@ def lista_pacientes(request):
     
     return render(request, 'odontologia_app/lista_pacientes.html', {'pacientes': pacientes})
 
+@csrf_protect
 def crear_paciente(request):
     if request.method == 'POST':
         datos = {
@@ -75,6 +85,7 @@ def crear_paciente(request):
     else:
         return render(request, 'odontologia_app/crear_paciente.html')
 
+@csrf_protect
 def editar_paciente(request, id):
     paciente = get_object_or_404(Paciente, id=id)
     
@@ -92,6 +103,7 @@ def editar_paciente(request, id):
     else:
         return render(request, 'odontologia_app/editar_paciente.html', {'paciente': paciente})
 
+@csrf_protect
 def crear_historia_medica(request):
     if request.method == 'POST':
         form = HistoriaMedicaForm(request.POST)
@@ -104,6 +116,7 @@ def crear_historia_medica(request):
         form = HistoriaMedicaForm()
     return render(request, 'odontologia_app/crear_historia_medica.html', {'form': form})
 
+@csrf_protect
 def crear_anamnesis(request, historia_id):
     historia_medica = get_object_or_404(Historia_Medica, id=historia_id)
     
@@ -118,6 +131,7 @@ def crear_anamnesis(request, historia_id):
         form = AnamnesisForm()
     return render(request, 'odontologia_app/crear_anamnesis.html', {'form': form, 'historia_medica': historia_medica})
 
+@csrf_protect
 def completar_anamnesis(request, anamnesis_id):
     anamnesis = get_object_or_404(Anamnesis, id=anamnesis_id)
     
@@ -146,6 +160,7 @@ def completar_anamnesis(request, anamnesis_id):
         'anamnesis': anamnesis,
     })
 
+@csrf_protect
 def lista_historias_medicas(request):
     historias = Historia_Medica.objects.filter(examinador=request.user).select_related(
         'anamnesis'
@@ -155,6 +170,7 @@ def lista_historias_medicas(request):
     )
     return render(request, 'odontologia_app/lista_historias_medicas.html', {'historias': historias})
 
+@csrf_protect
 def editar_historia_medica(request, historia_id):
     historia = get_object_or_404(Historia_Medica, id=historia_id)
     
@@ -194,11 +210,13 @@ def editar_historia_medica(request, historia_id):
         'antecedentes_form': antecedentes_form,
     })
 
+@csrf_protect
 def eliminar_historia_medica(request, historia_id):
     historia = get_object_or_404(Historia_Medica, id=historia_id)
     historia.delete()
     return redirect('lista_historias_medicas')
-
+    
+@csrf_protect
 def crear_representante(request):
     if request.method == 'POST':
         cedula = request.POST.get('cedula')

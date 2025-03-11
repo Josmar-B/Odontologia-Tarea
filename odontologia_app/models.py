@@ -131,7 +131,7 @@ class HistoriaMedica(models.Model):
 
 class Anamnesis(models.Model):
     historia_medica = models.OneToOneField(
-        Historia_Medica,
+        'HistoriaMedica',  # Nombre corregido del modelo
         on_delete=models.CASCADE,
         verbose_name="Historia Médica",
         related_name="anamnesis"
@@ -145,7 +145,7 @@ class Anamnesis(models.Model):
     hemorragias = models.BooleanField(default=False, verbose_name="Hemorragias")
     hepatitis = models.BooleanField(default=False, verbose_name="Hepatitis")
     sinusitis = models.BooleanField(default=False, verbose_name="Sinusitis")
-    trastornos_mentales = models.BooleanField(default=False, verbose_name="Trastornos Mentales")  # Corregido
+    trastornos_mentales = models.BooleanField(default=False, verbose_name="Trastornos Mentales")
     enfermedades_eruptivas = models.BooleanField(default=False, verbose_name="Enfermedades Eruptivas")
     enfermedades_renales = models.BooleanField(default=False, verbose_name="Enfermedades Renales")
     parotiditis = models.BooleanField(default=False, verbose_name="Parotiditis")

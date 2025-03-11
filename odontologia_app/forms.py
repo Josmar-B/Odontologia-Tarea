@@ -12,7 +12,7 @@ class RegistroForm(UserCreationForm):
         fields = ['email', 'nombre', 'password1', 'password2']
 class HistoriaMedicaForm(forms.ModelForm):
     class Meta:
-        model = Historia_Medica
+        model = HistoriaMedica
         fields = ['paciente']
 
     def __init__(self, *args, **kwargs):

@@ -1,6 +1,7 @@
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin,BaseUserManager
 from django.db import models
 
+
 class Rol(models.Model):
     es_admin = models.BooleanField(default=False, verbose_name="Es Administrador")
 
@@ -112,7 +113,7 @@ class Paciente(models.Model):
 
 class Historia_Medica(models.Model):
     paciente = models.ForeignKey(Paciente, on_delete=models.CASCADE, verbose_name="Paciente")
-    examinador = models.ForeignKey(Usuario, on_delete=models.CASCADE, verbose_name="Examinador")
+    examinador = models.ForeignKey("odontologia_app.Usuario", on_delete=models.CASCADE, verbose_name="Examinador")
     fecha_creacion = models.DateTimeField(auto_now_add=True, verbose_name="Fecha de Creación")
 
     def __str__(self):

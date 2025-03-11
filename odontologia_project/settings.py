@@ -84,7 +84,8 @@ TEMPLATES = [
 ]
 WSGI_APPLICATION = 'odontologia_project.wsgi.application'
 
-AUTH_USER_MODEL = 'odontologia_app.Usuario'
+AUTH_USER_MODEL = "odontologia_app.usuario"
+
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases

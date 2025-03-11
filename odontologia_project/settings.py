@@ -84,7 +84,7 @@ TEMPLATES = [
 ]
 WSGI_APPLICATION = 'odontologia_project.wsgi.application'
 
-AUTH_USER_MODEL = "odontologia_app.usuario"
+AUTH_USER_MODEL = "odontologia_app.Usuario"
 
 
 # Database

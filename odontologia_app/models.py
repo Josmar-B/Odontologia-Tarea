@@ -76,7 +76,6 @@ class Representante(models.Model):
         return f"{self.nombre} (Cédula: {self.cedula})"
 
     class Meta:
-        db_table = 'representante'  
         verbose_name = "Representante"
         verbose_name_plural = "Representantes"
 
@@ -99,7 +98,6 @@ class Paciente(models.Model):
         on_delete=models.CASCADE,
         verbose_name="Cédula del Representante",
         related_name="pacientes",
-        db_column='cedula_representante',
         null=True,  # Cambiar a null=False si es obligatorio
         blank=True   # Cambiar a blank=False si es obligatorio
     )
@@ -115,12 +113,11 @@ class Paciente(models.Model):
         return f"Paciente {self.id} (Cédula: {self.cedula})"
 
     class Meta:
-        db_table = 'paciente'  
         verbose_name = "Paciente"
         verbose_name_plural = "Pacientes"
 
 
-class Historia_Medica(models.Model):
+class HistoriaMedica(models.Model):
     paciente = models.ForeignKey(Paciente, on_delete=models.CASCADE, verbose_name="Paciente")
     examinador = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name="Examinador")  # Usar el modelo de usuario configurado en settings
     fecha_creacion = models.DateTimeField(auto_now_add=True, verbose_name="Fecha de Creación")
@@ -129,13 +126,13 @@ class Historia_Medica(models.Model):
         return f"Historia Médica de {self.paciente.nombre} (Examinador: {self.examinador.nombre})"
 
     class Meta:
-        verbose_name = "Historia_Medica"
-        verbose_name_plural = "Historias_Medicas"
+        verbose_name = "Historia Médica"
+        verbose_name_plural = "Historias Médicas"
 
 
 class Anamnesis(models.Model):
     historia_medica = models.OneToOneField(
-        Historia_Medica,
+        HistoriaMedica,
         on_delete=models.CASCADE,
         verbose_name="Historia Médica",
         related_name="anamnesis"
@@ -149,7 +146,7 @@ class Anamnesis(models.Model):
     hemorragias = models.BooleanField(default=False, verbose_name="Hemorragias")
     hepatitis = models.BooleanField(default=False, verbose_name="Hepatitis")
     sinusitis = models.BooleanField(default=False, verbose_name="Sinusitis")
-    trastorno_mentales = models.BooleanField(default=False, verbose_name="Trastornos Mentales")
+    trastornos_mentales = models.BooleanField(default=False, verbose_name="Trastornos Mentales")
     enfermedades_eruptivas = models.BooleanField(default=False, verbose_name="Enfermedades Eruptivas")
     enfermedades_renales = models.BooleanField(default=False, verbose_name="Enfermedades Renales")
     parotiditis = models.BooleanField(default=False, verbose_name="Parotiditis")

@@ -129,10 +129,9 @@ class HistoriaMedica(models.Model):
         verbose_name = "Historia Médica"
         verbose_name_plural = "Historias Médicas"
 
-
 class Anamnesis(models.Model):
     historia_medica = models.OneToOneField(
-        HistoriaMedica,
+        Historia_Medica,
         on_delete=models.CASCADE,
         verbose_name="Historia Médica",
         related_name="anamnesis"
@@ -146,7 +145,7 @@ class Anamnesis(models.Model):
     hemorragias = models.BooleanField(default=False, verbose_name="Hemorragias")
     hepatitis = models.BooleanField(default=False, verbose_name="Hepatitis")
     sinusitis = models.BooleanField(default=False, verbose_name="Sinusitis")
-    trastornos_mentales = models.BooleanField(default=False, verbose_name="Trastornos Mentales")
+    trastornos_mentales = models.BooleanField(default=False, verbose_name="Trastornos Mentales")  # Corregido
     enfermedades_eruptivas = models.BooleanField(default=False, verbose_name="Enfermedades Eruptivas")
     enfermedades_renales = models.BooleanField(default=False, verbose_name="Enfermedades Renales")
     parotiditis = models.BooleanField(default=False, verbose_name="Parotiditis")
@@ -157,6 +156,7 @@ class Anamnesis(models.Model):
     class Meta:
         verbose_name = "Anamnesis"
         verbose_name_plural = "Anamnesis"
+
 
 
 class AntecedentesFamiliares(models.Model):

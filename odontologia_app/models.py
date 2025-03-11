@@ -1,5 +1,6 @@
-from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin,BaseUserManager
+from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 from django.db import models
+from django.conf import settings
 
 
 class Rol(models.Model):
@@ -12,12 +13,16 @@ class Rol(models.Model):
         verbose_name = "Rol"
         verbose_name_plural = "Roles"
 
+
 class UsuarioManager(BaseUserManager):
     def create_user(self, email, nombre, password=None):
         if not email:
             raise ValueError('El usuario debe tener un correo electrónico.')
+        email = self.normalize_email(email)
+        if Usuario.objects.filter(email=email).exists():
+            raise ValueError('El correo electrónico ya está en uso.')
         usuario = self.model(
-            email=self.normalize_email(email),
+            email=email,
             nombre=nombre,
         )
         usuario.set_password(password)
@@ -35,7 +40,8 @@ class UsuarioManager(BaseUserManager):
         usuario.is_superuser = True
         usuario.save(using=self._db)
         return usuario
-    
+
+
 class Usuario(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True, verbose_name="Correo Electrónico")
     nombre = models.CharField(max_length=100, verbose_name="Nombre")
@@ -61,6 +67,7 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
         verbose_name = "Usuario"
         verbose_name_plural = "Usuarios"
 
+
 class Representante(models.Model):
     cedula = models.CharField(max_length=20, primary_key=True, verbose_name="Cédula del Representante")
     nombre = models.CharField(max_length=100, verbose_name="Nombre del Representante")
@@ -72,6 +79,7 @@ class Representante(models.Model):
         db_table = 'representante'  
         verbose_name = "Representante"
         verbose_name_plural = "Representantes"
+
 
 class Paciente(models.Model):
     SEXO_CHOICES = [
@@ -92,8 +100,8 @@ class Paciente(models.Model):
         verbose_name="Cédula del Representante",
         related_name="pacientes",
         db_column='cedula_representante',
-        null=True,  
-        blank=True  
+        null=True,  # Cambiar a null=False si es obligatorio
+        blank=True   # Cambiar a blank=False si es obligatorio
     )
     cedula = models.CharField(max_length=20, verbose_name="Cédula del Paciente")
     nombre = models.CharField(max_length=100, verbose_name="Nombre del Paciente")  
@@ -111,9 +119,10 @@ class Paciente(models.Model):
         verbose_name = "Paciente"
         verbose_name_plural = "Pacientes"
 
+
 class Historia_Medica(models.Model):
     paciente = models.ForeignKey(Paciente, on_delete=models.CASCADE, verbose_name="Paciente")
-    examinador = models.ForeignKey("odontologia_app.Usuario", on_delete=models.CASCADE, verbose_name="Examinador")
+    examinador = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name="Examinador")  # Usar el modelo de usuario configurado en settings
     fecha_creacion = models.DateTimeField(auto_now_add=True, verbose_name="Fecha de Creación")
 
     def __str__(self):
@@ -122,6 +131,7 @@ class Historia_Medica(models.Model):
     class Meta:
         verbose_name = "Historia_Medica"
         verbose_name_plural = "Historias_Medicas"
+
 
 class Anamnesis(models.Model):
     historia_medica = models.OneToOneField(

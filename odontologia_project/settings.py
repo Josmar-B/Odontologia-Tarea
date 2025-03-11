@@ -14,9 +14,7 @@ from pathlib import Path
 import os
 
 ALLOWED_HOSTS = [
-    'odontologia-tarea.onrender.com',  # Dominio de Render.com
-    'localhost',                      # Para desarrollo local
-    '127.0.0.1',                     # Para desarrollo local
+*     # Para desarrollo local
 ]
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.

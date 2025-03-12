@@ -16,7 +16,8 @@ import os
 ALLOWED_HOSTS = [
     "odontologia-tarea.onrender.com",
     "127.0.0.1",  # Para pruebas locales
-    "localhost"
+    "localhost",
+    'https://odontologia-tarea-production.up.railway.app'
 ]
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent

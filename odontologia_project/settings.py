@@ -18,8 +18,7 @@ ALLOWED_HOSTS = ['*']
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 CSRF_TRUSTED_ORIGINS = [
-    'https://odontologia-tarea.onrender.com',
-    'http://localhost',
+'*'
 ]
 
 

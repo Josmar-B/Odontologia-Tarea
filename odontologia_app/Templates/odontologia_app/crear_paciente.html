@@ -102,7 +102,7 @@
         </div>
     </div>
 
-   <script>
+ <script>
     // Función para abrir el modal
     function abrirModal() {
         document.getElementById('crearRepresentanteModal').style.display = 'block';
@@ -150,10 +150,10 @@
                 // Actualizar el campo de selección con el nuevo representante
                 const select = document.getElementById('cedula_representante');
                 const option = document.createElement('option');
-                option.value = data.cedula;
+                option.value = data.id;  // Usar el ID del representante
                 option.text = `${data.nombre} (${data.cedula})`;
                 select.appendChild(option);
-                select.value = data.cedula;  // Seleccionar el nuevo representante
+                select.value = data.id;  // Seleccionar el nuevo representante
 
                 alert('Representante creado correctamente.');
                 cerrarModal();  // Cerrar el modal

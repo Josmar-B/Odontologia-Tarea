@@ -81,6 +81,7 @@ def lista_pacientes(request):
 def crear_paciente(request):
     if request.method == 'POST':
         try:
+            print(request.POST)  # Depuración: Imprime todos los datos enviados
             datos = {
                 'cedula': request.POST.get('cedula'),
                 'nombre': request.POST.get('nombre'),

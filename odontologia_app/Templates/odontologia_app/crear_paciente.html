@@ -21,26 +21,19 @@
                 <input type="text" id="cedula" name="cedula" class="form-control" required>
             </div>
             <div class="form-group">
+                <label for="cedula_representante">Cédula del Representante:</label>
+                <div class="input-group">
+                    <input type="text" id="cedula_representante" name="cedula_representante" class="form-control">
+                    <div class="input-group-append">
+                        <button type="button" class="btn btn-info" onclick="abrirModal()">Crear Representante</button>
+                    </div>
+                </div>
+            </div>
+            <!-- Resto del formulario -->
+            <div class="form-group">
                 <label for="nombre">Nombre:</label>
                 <input type="text" id="nombre" name="nombre" class="form-control" required>
             </div>
-           <div class="form-group">
-    <label for="cedula_representante">Cédula del Representante:</label>
-<div class="form-group">
-    <label for="cedula_representante">Cédula del Representante:</label>
-    <div class="input-group">
-        <select id="cedula_representante" name="cedula_representante" class="form-control">
-            <option value="">Seleccione un representante...</option>
-            {% for representante in representantes %}
-                <option value="{{ representante.id }}">{{ representante.nombre }} ({{ representante.cedula }})</option>
-            {% endfor %}
-        </select>
-        <div class="input-group-append">
-            <button type="button" class="btn btn-info" onclick="abrirModal()">Crear Representante</button>
-            <button type="button" class="btn btn-secondary" onclick="dejarComoNulo()">Dejar como Nulo</button>
-        </div>
-    </div>
-</div>
             <div class="form-group">
                 <label for="edad">Edad:</label>
                 <input type="number" id="edad" name="edad" class="form-control" required>
@@ -104,71 +97,60 @@
         </div>
     </div>
 
- <script>
-    // Función para abrir el modal
-    function abrirModal() {
-        document.getElementById('crearRepresentanteModal').style.display = 'block';
-    }
-
-    // Función para cerrar el modal
-    function cerrarModal() {
-        document.getElementById('crearRepresentanteModal').style.display = 'none';
-    }
-
-    // Función para dejar el campo de selección como nulo
-    function dejarComoNulo() {
-        document.getElementById('cedula_representante').value = '';
-    }
-
-    // Función para crear un representante
-    function crearRepresentante() {
-        const cedula = document.getElementById('cedula_representante_crear').value;
-        const nombre = document.getElementById('nombre_representante_crear').value;
-
-        if (!cedula || !nombre) {
-            alert('Por favor, complete todos los campos.');
-            return;
+    <script>
+        // Función para abrir el modal
+        function abrirModal() {
+            document.getElementById('crearRepresentanteModal').style.display = 'block';
         }
 
-        const formData = new FormData();
-        formData.append('cedula', cedula);
-        formData.append('nombre', nombre);
+        // Función para cerrar el modal
+        function cerrarModal() {
+            document.getElementById('crearRepresentanteModal').style.display = 'none';
+        }
 
-        fetch('{% url "crear_representante" %}', {
-            method: 'POST',
-            body: formData,
-            headers: {
-                'X-CSRFToken': '{{ csrf_token }}',
-            },
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Error en la solicitud.');
-            }
-            return response.json();
-        })
-        .then(data => {
-            if (data.status === 'success') {
-                // Actualizar el campo de selección con el nuevo representante
-                const select = document.getElementById('cedula_representante');
-                const option = document.createElement('option');
-                option.value = data.id;  // Usar el ID del representante
-                option.text = `${data.nombre} (${data.cedula})`;
-                select.appendChild(option);
-                select.value = data.id;  // Seleccionar el nuevo representante
+        // Función para crear un representante
+        function crearRepresentante() {
+            const cedula = document.getElementById('cedula_representante_crear').value;
+            const nombre = document.getElementById('nombre_representante_crear').value;
 
-                alert('Representante creado correctamente.');
-                cerrarModal();  // Cerrar el modal
-            } else {
-                throw new Error(data.message || 'Error al crear el representante.');
+            if (!cedula || !nombre) {
+                alert('Por favor, complete todos los campos.');
+                return;
             }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert(error.message || 'Error al crear el representante.');
-        });
-    }
-</script>
+
+            const formData = new FormData();
+            formData.append('cedula', cedula);
+            formData.append('nombre', nombre);
+
+            fetch('{% url "crear_representante" %}', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}',
+                },
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Error en la solicitud.');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.status === 'success') {
+                    // Autocompletar la cédula del representante en el formulario principal
+                    document.getElementById('cedula_representante').value = cedula;
+                    alert('Representante creado correctamente.');
+                    cerrarModal();  // Cerrar el modal
+                } else {
+                    throw new Error(data.message || 'Error al crear el representante.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert(error.message || 'Error al crear el representante.');
+            });
+        }
+    </script>
 </body>
 </html>
 {% endblock %}

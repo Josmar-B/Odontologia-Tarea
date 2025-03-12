@@ -81,31 +81,21 @@ def lista_pacientes(request):
 def crear_paciente(request):
     if request.method == 'POST':
         try:
-            print(request.POST)  # Depuración: Imprime todos los datos enviados
+            # Obtener los datos del formulario
             cedula = request.POST.get('cedula')
             nombre = request.POST.get('nombre')
-            cedula_representante = request.POST.get('cedula_representante')
+            cedula_representante = request.POST.get('cedula_representante')  # Cédula del representante como texto
             edad = int(request.POST.get('edad'))
             telefono = request.POST.get('telefono')
             sexo = request.POST.get('sexo')
             estado_civil = request.POST.get('estado_civil') == 'true'
             ocupacion = request.POST.get('ocupacion')
 
-            print(f"Cédula del representante seleccionada: {cedula_representante}")  # Depuración
-
-            # Buscar el representante por su cédula
-            representante = None
-            if cedula_representante:
-                representante = Representante.objects.filter(cedula=cedula_representante).first()
-                if not representante:
-                    messages.error(request, 'El representante no existe.')
-                    return redirect('crear_paciente')
-
             # Crear el paciente
             Paciente.objects.create(
                 cedula=cedula,
                 nombre=nombre,
-                cedula_representante=representante,  # Asignar el representante (puede ser None)
+                cedula_representante=cedula_representante,  # Guardar la cédula del representante como texto
                 edad=edad,
                 telefono=telefono,
                 sexo=sexo,
@@ -115,7 +105,7 @@ def crear_paciente(request):
             return redirect('lista_pacientes')
         except Exception as e:
             messages.error(request, f'Ocurrió un error al crear el paciente: {str(e)}')
-    return render(request, 'odontologia_app/crear_paciente.html', {'representantes': Representante.objects.all()})
+    return render(request, 'odontologia_app/crear_paciente.html')
 
 @csrf_exempt
 def editar_paciente(request, id):

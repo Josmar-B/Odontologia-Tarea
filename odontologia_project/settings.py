@@ -125,7 +125,7 @@ STORAGES = {
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Custom user model
-AUTH_USER_MODEL = "odontologia_app.Usuario"
+AUTH_USER_MODEL = "odontologia_app.usuario"
 
 # Login redirect URL
 LOGIN_REDIRECT_URL = '/principal'

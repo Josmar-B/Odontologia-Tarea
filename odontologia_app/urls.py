@@ -17,7 +17,6 @@ urlpatterns = [
     path('historias-medicas/<int:historia_id>/editar/', views.editar_historia_medica, name='editar_historia_medica'),
     path('historias-medicas/<int:historia_id>/eliminar/', views.eliminar_historia_medica, name='eliminar_historia_medica'),
     path('anamnesis/<int:anamnesis_id>/completar/', views.completar_anamnesis, name='completar_anamnesis'),
-path('crear-representante/', views.crear_representante, name='crear_representante'),
-
+    path('crear-representante/', views.crear_representante, name='crear_representante'),
 
 ]

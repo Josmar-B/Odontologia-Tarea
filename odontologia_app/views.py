@@ -78,11 +78,10 @@ def lista_pacientes(request):
     return render(request, 'odontologia_app/lista_pacientes.html', {'pacientes': pacientes})
 
 @csrf_exempt
-@csrf_exempt
 def crear_paciente(request):
     if request.method == 'POST':
         try:
-            # Obtener los datos del formulario
+            print(request.POST)  # Depuración: Imprime todos los datos enviados
             cedula = request.POST.get('cedula')
             nombre = request.POST.get('nombre')
             cedula_representante = request.POST.get('cedula_representante')
@@ -91,6 +90,8 @@ def crear_paciente(request):
             sexo = request.POST.get('sexo')
             estado_civil = request.POST.get('estado_civil') == 'true'
             ocupacion = request.POST.get('ocupacion')
+
+            print(f"Cédula del representante seleccionada: {cedula_representante}")  # Depuración
 
             # Buscar el representante por su cédula
             representante = None
@@ -104,7 +105,7 @@ def crear_paciente(request):
             Paciente.objects.create(
                 cedula=cedula,
                 nombre=nombre,
-                representante=representante,  # Asignar el representante (puede ser None)
+                cedula_representante=representante,  # Asignar el representante (puede ser None)
                 edad=edad,
                 telefono=telefono,
                 sexo=sexo,

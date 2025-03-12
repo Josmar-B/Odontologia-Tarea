@@ -78,7 +78,8 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form id="crearRepresentanteForm">
+                    <!-- Usa un div en lugar de un formulario -->
+                    <div id="crearRepresentanteForm">
                         <div class="mb-3">
                             <label for="cedula_representante_crear" class="form-label">Cédula:</label>
                             <input type="text" id="cedula_representante_crear" name="cedula_representante_crear" class="form-control" required>
@@ -87,7 +88,7 @@
                             <label for="nombre_representante_crear" class="form-label">Nombre:</label>
                             <input type="text" id="nombre_representante_crear" name="nombre_representante_crear" class="form-control" required>
                         </div>
-                    </form>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
@@ -138,7 +139,7 @@
                 if (data.status === 'success') {
                     document.getElementById('cedula_representante').value = cedula;
                     alert('Representante creado correctamente.');
-                    bootstrap.Modal.getInstance(document.getElementById('crearRepresentanteModal')).hide(); // Cerrar el modal
+                    bootstrap.Modal.getInstance(document.getElementById('crearRepresentanteModal')).hide();
                 } else {
                     throw new Error(data.message || 'Error al crear el representante.');
                 }

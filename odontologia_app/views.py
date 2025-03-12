@@ -229,9 +229,6 @@ def eliminar_historia_medica(request, historia_id):
     return redirect('lista_historias_medicas')
     
 @csrf_exempt
-from .forms import RepresentanteForm
-
-@csrf_exempt
 def crear_representante(request):
     if request.method == 'POST':
         form = RepresentanteForm(request.POST)

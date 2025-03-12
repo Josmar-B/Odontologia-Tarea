@@ -9,93 +9,42 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Crear Paciente</title>
-    <style>
-        /* Estilos para el modal */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            justify-content: center;
-            align-items: center;
-        }
-
-        .modal-content {
-            background-color: white;
-            padding: 20px;
-            border-radius: 5px;
-            width: 300px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
-
-        .close-modal {
-            float: right;
-            font-size: 24px;
-            cursor: pointer;
-        }
-
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-        }
-
-        .form-group input {
-            width: 100%;
-            padding: 8px;
-            box-sizing: border-box;
-        }
-
-        .btn-guardar {
-            background-color: #4CAF50;
-            color: white;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        .btn-guardar:hover {
-            background-color: #45a049;
-        }
-    </style>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-    <div class="container">
-        <h1>Crear Nuevo Paciente</h1>
-        <form method="post">
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">Crear Nuevo Paciente</h1>
+        <form method="post" class="card p-4 shadow">
             {% csrf_token %}
             <div class="form-group">
                 <label for="cedula">Cédula:</label>
-                <input type="text" id="cedula" name="cedula" required>
+                <input type="text" id="cedula" name="cedula" class="form-control" required>
             </div>
             <div class="form-group">
                 <label for="cedula_representante">Cédula del Representante:</label>
-                <input type="text" id="cedula_representante" name="cedula_representante">
-                <button type="button" onclick="abrirModal()">Crear Representante</button>
+                <div class="input-group">
+                    <input type="text" id="cedula_representante" name="cedula_representante" class="form-control">
+                    <div class="input-group-append">
+                        <button type="button" class="btn btn-info" onclick="abrirModal()">Crear Representante</button>
+                    </div>
+                </div>
             </div>
             <!-- Resto del formulario -->
             <div class="form-group">
                 <label for="nombre">Nombre:</label>
-                <input type="text" id="nombre" name="nombre" required>
+                <input type="text" id="nombre" name="nombre" class="form-control" required>
             </div>
             <div class="form-group">
                 <label for="edad">Edad:</label>
-                <input type="number" id="edad" name="edad" required>
+                <input type="number" id="edad" name="edad" class="form-control" required>
             </div>
             <div class="form-group">
                 <label for="telefono">Teléfono:</label>
-                <input type="text" id="telefono" name="telefono" required>
+                <input type="text" id="telefono" name="telefono" class="form-control" required>
             </div>
             <div class="form-group">
                 <label for="sexo">Sexo:</label>
-                <select id="sexo" name="sexo" required>
+                <select id="sexo" name="sexo" class="form-control" required>
                     <option value="M">Masculino</option>
                     <option value="F">Femenino</option>
                     <option value="O">Otro</option>
@@ -103,46 +52,55 @@
             </div>
             <div class="form-group">
                 <label for="estado_civil">Estado Civil:</label>
-                <select id="estado_civil" name="estado_civil" required>
+                <select id="estado_civil" name="estado_civil" class="form-control" required>
                     <option value="true">Casado</option>
                     <option value="false">Soltero</option>
                 </select>
             </div>
             <div class="form-group">
                 <label for="ocupacion">Ocupación:</label>
-                <input type="text" id="ocupacion" name="ocupacion" required>
+                <input type="text" id="ocupacion" name="ocupacion" class="form-control" required>
             </div>
-            <button type="submit" class="btn-guardar">Crear Paciente</button>
+            <button type="submit" class="btn btn-success">Crear Paciente</button>
         </form>
 
         <br>
-        <a href="{% url 'lista_pacientes' %}">Volver a la lista de pacientes</a>
+        <a href="{% url 'lista_pacientes' %}" class="btn btn-outline-secondary">Volver a la lista de pacientes</a>
     </div>
 
     <!-- Modal para crear Representante -->
-    <div id="crearRepresentanteModal" class="modal">
-        <div class="modal-content">
-            <span class="close-modal" onclick="cerrarModal()">&times;</span>
-            <h2>Crear Representante</h2>
-            <form id="crearRepresentanteForm">
-                {% csrf_token %}
-                <div class="form-group">
-                    <label for="cedula_representante_crear">Cédula:</label>
-                    <input type="text" id="cedula_representante_crear" name="cedula" required>
+    <div id="crearRepresentanteModal" class="modal" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Crear Representante</h5>
+                    <button type="button" class="close" onclick="cerrarModal()">&times;</button>
                 </div>
-                <div class="form-group">
-                    <label for="nombre_representante_crear">Nombre:</label>
-                    <input type="text" id="nombre_representante_crear" name="nombre" required>
+                <div class="modal-body">
+                    <form id="crearRepresentanteForm">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="cedula_representante_crear">Cédula:</label>
+                            <input type="text" id="cedula_representante_crear" name="cedula" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="nombre_representante_crear">Nombre:</label>
+                            <input type="text" id="nombre_representante_crear" name="nombre" class="form-control" required>
+                        </div>
+                    </form>
                 </div>
-                <button type="submit" class="btn-guardar">Guardar</button>
-            </form>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="cerrarModal()">Cerrar</button>
+                    <button type="button" class="btn btn-primary" onclick="crearRepresentante()">Guardar</button>
+                </div>
+            </div>
         </div>
     </div>
 
     <script>
         // Función para abrir el modal
         function abrirModal() {
-            document.getElementById('crearRepresentanteModal').style.display = 'flex';
+            document.getElementById('crearRepresentanteModal').style.display = 'block';
         }
 
         // Función para cerrar el modal
@@ -150,10 +108,8 @@
             document.getElementById('crearRepresentanteModal').style.display = 'none';
         }
 
-        // Función para enviar el formulario de creación de representante
-        document.getElementById('crearRepresentanteForm').addEventListener('submit', function (event) {
-            event.preventDefault();  // Evita el envío tradicional del formulario
-
+        // Función para crear un representante
+        function crearRepresentante() {
             const cedula = document.getElementById('cedula_representante_crear').value;
             const nombre = document.getElementById('nombre_representante_crear').value;
 
@@ -173,7 +129,12 @@
                     'X-CSRFToken': '{{ csrf_token }}',
                 },
             })
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Error en la solicitud.');
+                }
+                return response.json();
+            })
             .then(data => {
                 if (data.status === 'success') {
                     // Autocompletar la cédula del representante en el formulario principal
@@ -181,14 +142,14 @@
                     alert('Representante creado correctamente.');
                     cerrarModal();  // Cerrar el modal
                 } else {
-                    alert('Error: ' + data.message);
+                    throw new Error(data.message || 'Error al crear el representante.');
                 }
             })
             .catch(error => {
                 console.error('Error:', error);
-                alert('Error al crear el representante.');
+                alert(error.message || 'Error al crear el representante.');
             });
-        });
+        }
     </script>
 </body>
 </html>

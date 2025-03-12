@@ -229,13 +229,19 @@ def eliminar_historia_medica(request, historia_id):
     return redirect('lista_historias_medicas')
     
 @csrf_exempt
+from .forms import RepresentanteForm
+
+@csrf_exempt
 def crear_representante(request):
     if request.method == 'POST':
-        cedula = request.POST.get('cedula')
-        nombre = request.POST.get('nombre')
-
-        representante = Representante(cedula=cedula, nombre=nombre)
-        representante.save()
-
-        return JsonResponse({'status': 'success'})
-    return JsonResponse({'status': 'error'}, status=400)
+        form = RepresentanteForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Representante creado exitosamente.')
+            return redirect('lista_pacientes')
+        else:
+            messages.error(request, 'Por favor, corrija los errores en el formulario.')
+    else:
+        form = RepresentanteForm()
+    
+    return render(request, 'odontologia_app/crear_representante.html', {'form': form})

@@ -19,7 +19,7 @@ class UsuarioManager(BaseUserManager):
         if not email:
             raise ValueError('El usuario debe tener un correo electrónico.')
         email = self.normalize_email(email)
-        if Usuario.objects.filter(email=email).exists():
+        if usuario.objects.filter(email=email).exists():
             raise ValueError('El correo electrónico ya está en uso.')
         usuario = self.model(
             email=email,
@@ -42,7 +42,7 @@ class UsuarioManager(BaseUserManager):
         return usuario
 
 
-class Usuario(AbstractBaseUser, PermissionsMixin):
+class usuario(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True, verbose_name="Correo Electrónico")
     nombre = models.CharField(max_length=100, verbose_name="Nombre")
     is_active = models.BooleanField(default=True)

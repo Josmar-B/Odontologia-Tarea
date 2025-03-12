@@ -78,25 +78,43 @@ def lista_pacientes(request):
     return render(request, 'odontologia_app/lista_pacientes.html', {'pacientes': pacientes})
 
 @csrf_exempt
+@csrf_exempt
 def crear_paciente(request):
     if request.method == 'POST':
         try:
-            print(request.POST)  # Depuración: Imprime todos los datos enviados
-            datos = {
-                'cedula': request.POST.get('cedula'),
-                'nombre': request.POST.get('nombre'),
-                'cedula_representante': request.POST.get('cedula_representante') or None,
-                'edad': int(request.POST.get('edad')),
-                'telefono': request.POST.get('telefono'),
-                'sexo': request.POST.get('sexo'),
-                'estado_civil': request.POST.get('estado_civil') == 'true',
-                'ocupacion': request.POST.get('ocupacion'),
-            }
-            Paciente.objects.create(**datos)
+            # Obtener los datos del formulario
+            cedula = request.POST.get('cedula')
+            nombre = request.POST.get('nombre')
+            cedula_representante = request.POST.get('cedula_representante')
+            edad = int(request.POST.get('edad'))
+            telefono = request.POST.get('telefono')
+            sexo = request.POST.get('sexo')
+            estado_civil = request.POST.get('estado_civil') == 'true'
+            ocupacion = request.POST.get('ocupacion')
+
+            # Buscar el representante por su cédula
+            representante = None
+            if cedula_representante:
+                representante = Representante.objects.filter(cedula=cedula_representante).first()
+                if not representante:
+                    messages.error(request, 'El representante no existe.')
+                    return redirect('crear_paciente')
+
+            # Crear el paciente
+            Paciente.objects.create(
+                cedula=cedula,
+                nombre=nombre,
+                representante=representante,  # Asignar el representante (puede ser None)
+                edad=edad,
+                telefono=telefono,
+                sexo=sexo,
+                estado_civil=estado_civil,
+                ocupacion=ocupacion
+            )
             return redirect('lista_pacientes')
         except Exception as e:
             messages.error(request, f'Ocurrió un error al crear el paciente: {str(e)}')
-    return render(request, 'odontologia_app/crear_paciente.html')
+    return render(request, 'odontologia_app/crear_paciente.html', {'representantes': Representante.objects.all()})
 
 @csrf_exempt
 def editar_paciente(request, id):
@@ -239,13 +257,13 @@ def crear_representante(request):
             return JsonResponse({'status': 'error', 'message': 'Todos los campos son obligatorios.'}, status=400)
 
         try:
-            # Verifica si ya existe un representante con la misma cédula
+            # Verificar si ya existe un representante con la misma cédula
             if Representante.objects.filter(cedula=cedula).exists():
                 return JsonResponse({'status': 'error', 'message': 'Ya existe un representante con esta cédula.'}, status=400)
 
-            # Crea el representante
-            Representante.objects.create(cedula=cedula, nombre=nombre)
-            return JsonResponse({'status': 'success'})
+            # Crear el representante
+            representante = Representante.objects.create(cedula=cedula, nombre=nombre)
+            return JsonResponse({'status': 'success', 'cedula': representante.cedula, 'nombre': representante.nombre})
         except Exception as e:
             return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
     else:

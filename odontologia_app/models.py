@@ -98,8 +98,8 @@ class Paciente(models.Model):
         on_delete=models.CASCADE,
         verbose_name="Cédula del Representante",
         related_name="pacientes",
-        null=True,  # Cambiar a null=False si es obligatorio
-        blank=True   # Cambiar a blank=False si es obligatorio
+        null=True,  # Permite valores nulos
+        blank=True   # Permite que el campo esté vacío en formularios
     )
     cedula = models.CharField(max_length=20, verbose_name="Cédula del Paciente")
     nombre = models.CharField(max_length=100, verbose_name="Nombre del Paciente")  
@@ -115,7 +115,6 @@ class Paciente(models.Model):
     class Meta:
         verbose_name = "Paciente"
         verbose_name_plural = "Pacientes"
-
 
 class HistoriaMedica(models.Model):
     paciente = models.ForeignKey(Paciente, on_delete=models.CASCADE, verbose_name="Paciente")

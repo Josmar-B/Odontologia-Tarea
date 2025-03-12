@@ -12,10 +12,10 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 import dj_database_url
-from dotenv import load_doatenv
+from dotenv import load_dotenv
 import os
 
-load_doatenv
+load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -80,7 +80,7 @@ WSGI_APPLICATION = 'odontologia_project.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 DATABASES = {
-    'default': dj_database_url.config(default=os.getenv('DATABASE_URL'))
+    'default': dj_database_url.config(default='postgresql://postgres:eZjktsbVcOmuHpxVXyasosaihRMqRNAX@turntable.proxy.rlwy.net:51520/railway')
 }
 
 # Password validation

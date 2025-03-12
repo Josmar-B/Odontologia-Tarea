@@ -84,7 +84,6 @@ def crear_paciente(request):
             datos = {
                 'cedula': request.POST.get('cedula'),
                 'nombre': request.POST.get('nombre'),
-                'cedula_representante': request.POST.get('cedula_representante') or None,
                 'edad': int(request.POST.get('edad')),
                 'telefono': request.POST.get('telefono'),
                 'sexo': request.POST.get('sexo'),
@@ -104,7 +103,6 @@ def editar_paciente(request, id):
     if request.method == 'POST':
         paciente.cedula = request.POST.get('cedula')
         paciente.nombre = request.POST.get('nombre')
-        paciente.cedula_representante = request.POST.get('cedula_representante')
         paciente.edad = int(request.POST.get('edad'))
         paciente.telefono = request.POST.get('telefono')
         paciente.sexo = request.POST.get('sexo')

@@ -79,7 +79,6 @@ class Representante(models.Model):
         verbose_name = "Representante"
         verbose_name_plural = "Representantes"
 
-
 class Paciente(models.Model):
     SEXO_CHOICES = [
         ('M', 'Masculino'),
@@ -93,11 +92,9 @@ class Paciente(models.Model):
     ]
 
     id = models.AutoField(primary_key=True, verbose_name="ID del Paciente")
-    cedula_representante = models.ForeignKey(
-        Representante,
-        on_delete=models.CASCADE,
+    cedula_representante = models.CharField(
+        max_length=20, 
         verbose_name="Cédula del Representante",
-        related_name="pacientes",
         null=True,  # Permite valores nulos
         blank=True   # Permite que el campo esté vacío en formularios
     )

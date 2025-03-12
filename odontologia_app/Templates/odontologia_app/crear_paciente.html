@@ -29,6 +29,7 @@
                 </div>
             </div>
 
+            <!-- Resto del formulario -->
             <div class="mb-3">
                 <label for="nombre" class="form-label">Nombre:</label>
                 <input type="text" id="nombre" name="nombre" class="form-control" required>
@@ -127,19 +128,24 @@
                     'X-CSRFToken': '{{ csrf_token }}',
                 },
             })
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Error en la solicitud.');
+                }
+                return response.json();
+            })
             .then(data => {
                 if (data.status === 'success') {
                     document.getElementById('cedula_representante').value = cedula;
                     alert('Representante creado correctamente.');
                     bootstrap.Modal.getInstance(document.getElementById('crearRepresentanteModal')).hide(); // Cerrar el modal
                 } else {
-                    alert('Error al crear el representante: ' + data.message);
+                    throw new Error(data.message || 'Error al crear el representante.');
                 }
             })
             .catch(error => {
                 console.error('Error:', error);
-                alert('Error al crear el representante');
+                alert(error.message || 'Error al crear el representante.');
             });
         }
     </script>

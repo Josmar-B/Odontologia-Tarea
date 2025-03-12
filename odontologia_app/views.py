@@ -174,7 +174,7 @@ def completar_anamnesis(request, anamnesis_id):
 
 @csrf_exempt
 def lista_historias_medicas(request):
-    historias = Historia_Medica.objects.filter(examinador=request.user).select_related(
+    historias = HistoriaMedica.objects.filter(examinador=request.user).select_related(
         'anamnesis'
     ).prefetch_related(
         'anamnesis__habitos',  
@@ -184,7 +184,7 @@ def lista_historias_medicas(request):
 
 @csrf_exempt
 def editar_historia_medica(request, historia_id):
-    historia = get_object_or_404(Historia_Medica, id=historia_id)
+    historia = get_object_or_404(HistoriaMedica, id=historia_id)
     
     anamnesis = historia.anamnesis
     habitos = anamnesis.habitos.first()  
@@ -224,7 +224,7 @@ def editar_historia_medica(request, historia_id):
 
 @csrf_exempt
 def eliminar_historia_medica(request, historia_id):
-    historia = get_object_or_404(Historia_Medica, id=historia_id)
+    historia = get_object_or_404(HistoriaMedica, id=historia_id)
     historia.delete()
     return redirect('lista_historias_medicas')
     

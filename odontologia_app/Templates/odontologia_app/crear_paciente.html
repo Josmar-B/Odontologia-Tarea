@@ -26,11 +26,13 @@
             </div>
            <div class="form-group">
     <label for="cedula_representante">Cédula del Representante:</label>
+<div class="form-group">
+    <label for="cedula_representante">Cédula del Representante:</label>
     <div class="input-group">
         <select id="cedula_representante" name="cedula_representante" class="form-control">
             <option value="">Seleccione un representante...</option>
             {% for representante in representantes %}
-                <option value="{{ representante.cedula }}">{{ representante.nombre }} ({{ representante.cedula }})</option>
+                <option value="{{ representante.id }}">{{ representante.nombre }} ({{ representante.cedula }})</option>
             {% endfor %}
         </select>
         <div class="input-group-append">

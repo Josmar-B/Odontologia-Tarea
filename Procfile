@@ -1,1 +1,1 @@
-web: python manage.py collectstatic && gunicorn odontologia_project.wsgi
+web: python manage.py collectstatic --noinput && gunicorn odontologia_project.wsgi

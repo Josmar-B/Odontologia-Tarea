@@ -21,24 +21,12 @@
                 <input type="text" id="cedula" name="cedula" class="form-control" required>
             </div>
             <div class="mb-3">
-                <label for="cedula_representante" class="form-label">Cedula del Representante:</label>
+                <label for="cedula_representante" class="form-label">Cédula del Representante:</label>
                 <div class="input-group">
                     <input type="text" id="cedula_representante" name="cedula_representante" class="form-control">
                     <button type="button" class="btn btn-secondary" onclick="dejarComoNulo()">Dejar como Nulo</button>
-                    <button type="button" class="btn btn-info" onclick="toggleCrearRepresentante()">Crear Representante</button>
+                    <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#crearRepresentanteModal">Crear Representante</button>
                 </div>
-            </div>
-
-            <div id="crearRepresentanteSection" style="display: none;">
-                <div class="mb-3">
-                    <label for="cedula_representante_crear" class="form-label">Registrar Cedula del Representante:</label>
-                    <input type="text" id="cedula_representante_crear" name="cedula_representante_crear" class="form-control">
-                </div>
-                <div class="mb-3">
-                    <label for="nombre_representante_crear" class="form-label">Nombre del Representante:</label>
-                    <input type="text" id="nombre_representante_crear" name="nombre_representante_crear" class="form-control">
-                </div>
-                <button type="button" class="btn btn-primary mb-3" onclick="crearRepresentante()">Guardar Representante</button>
             </div>
 
             <div class="mb-3">
@@ -80,14 +68,45 @@
         <a href="{% url 'lista_pacientes' %}" class="btn btn-outline-secondary">Volver a la lista de pacientes</a>
     </div>
 
+    <!-- Modal para crear Representante -->
+    <div class="modal fade" id="crearRepresentanteModal" tabindex="-1" aria-labelledby="crearRepresentanteModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="crearRepresentanteModalLabel">Crear Representante</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="crearRepresentanteForm">
+                        <div class="mb-3">
+                            <label for="cedula_representante_crear" class="form-label">Cédula:</label>
+                            <input type="text" id="cedula_representante_crear" name="cedula_representante_crear" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="nombre_representante_crear" class="form-label">Nombre:</label>
+                            <input type="text" id="nombre_representante_crear" name="nombre_representante_crear" class="form-control" required>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary" onclick="crearRepresentante()">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts de Bootstrap y JavaScript personalizado -->
     <script src="{% static 'popper.min.js' %}"></script>
     <script src="{% static 'bootstrap.min.js' %}"></script>
 
     <script>
+        // Función para dejar el campo de cédula del representante como nulo
         function dejarComoNulo() {
             document.getElementById('cedula_representante').value = '';
         }
 
+        // Función para crear un representante
         function crearRepresentante() {
             const cedula = document.getElementById('cedula_representante_crear').value;
             const nombre = document.getElementById('nombre_representante_crear').value;
@@ -105,7 +124,7 @@
                 method: 'POST',
                 body: formData,
                 headers: {
-                    'X-CSRFToken': '{{ csrf_token }}', 
+                    'X-CSRFToken': '{{ csrf_token }}',
                 },
             })
             .then(response => response.json())
@@ -113,6 +132,7 @@
                 if (data.status === 'success') {
                     document.getElementById('cedula_representante').value = cedula;
                     alert('Representante creado correctamente.');
+                    bootstrap.Modal.getInstance(document.getElementById('crearRepresentanteModal')).hide(); // Cerrar el modal
                 } else {
                     alert('Error al crear el representante: ' + data.message);
                 }
@@ -121,15 +141,6 @@
                 console.error('Error:', error);
                 alert('Error al crear el representante');
             });
-        }
-
-        function toggleCrearRepresentante() {
-            const section = document.getElementById('crearRepresentanteSection');
-            if (section.style.display === 'none') {
-                section.style.display = 'block';
-            } else {
-                section.style.display = 'none';
-            }
         }
     </script>
 </body>

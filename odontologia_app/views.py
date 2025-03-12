@@ -81,27 +81,17 @@ def lista_pacientes(request):
 def crear_paciente(request):
     if request.method == 'POST':
         try:
-            # Obtener los datos del formulario
-            cedula = request.POST.get('cedula')
-            nombre = request.POST.get('nombre')
-            cedula_representante = request.POST.get('cedula_representante')  # Cédula del representante como texto
-            edad = int(request.POST.get('edad'))
-            telefono = request.POST.get('telefono')
-            sexo = request.POST.get('sexo')
-            estado_civil = request.POST.get('estado_civil') == 'true'
-            ocupacion = request.POST.get('ocupacion')
-
-            # Crear el paciente
-            Paciente.objects.create(
-                cedula=cedula,
-                nombre=nombre,
-                cedula_representante=cedula_representante,  # Guardar la cédula del representante como texto
-                edad=edad,
-                telefono=telefono,
-                sexo=sexo,
-                estado_civil=estado_civil,
-                ocupacion=ocupacion
-            )
+            datos = {
+                'cedula': request.POST.get('cedula'),
+                'nombre': request.POST.get('nombre'),
+                'cedula_representante': request.POST.get('cedula_representante') or None,
+                'edad': int(request.POST.get('edad')),
+                'telefono': request.POST.get('telefono'),
+                'sexo': request.POST.get('sexo'),
+                'estado_civil': request.POST.get('estado_civil') == 'true',
+                'ocupacion': request.POST.get('ocupacion'),
+            }
+            Paciente.objects.create(**datos)
             return redirect('lista_pacientes')
         except Exception as e:
             messages.error(request, f'Ocurrió un error al crear el paciente: {str(e)}')
@@ -248,19 +238,14 @@ def crear_representante(request):
             return JsonResponse({'status': 'error', 'message': 'Todos los campos son obligatorios.'}, status=400)
 
         try:
-            # Verificar si ya existe un representante con la misma cédula
+            # Verifica si ya existe un representante con la misma cédula
             if Representante.objects.filter(cedula=cedula).exists():
                 return JsonResponse({'status': 'error', 'message': 'Ya existe un representante con esta cédula.'}, status=400)
 
-            # Crear el representante
-            representante = Representante.objects.create(cedula=cedula, nombre=nombre)
-            return JsonResponse({
-                'status': 'success',
-                'id': representante.id,  # Devolver el ID del representante
-                'cedula': representante.cedula,
-                'nombre': representante.nombre
-            })
+            # Crea el representante
+            Representante.objects.create(cedula=cedula, nombre=nombre)
+            return JsonResponse({'status': 'success'})
         except Exception as e:
             return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
     else:
-        return JsonResponse({'status': 'error', 'message': 'Método no permitido.'}, status=405)o no permitido.'}, status=405)
+        return JsonResponse({'status': 'error', 'message': 'Método no permitido.'}, status=405)

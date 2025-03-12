@@ -130,7 +130,7 @@ def crear_historia_medica(request):
 
 @csrf_exempt
 def crear_anamnesis(request, historia_id):
-    historia_medica = get_object_or_404(Historia_Medica, id=historia_id)
+    historia_medica = get_object_or_404(HistoriaMedica, id=historia_id)
     
     if request.method == 'POST':
         form = AnamnesisForm(request.POST)

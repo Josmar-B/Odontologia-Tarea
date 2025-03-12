@@ -80,7 +80,7 @@ WSGI_APPLICATION = 'odontologia_project.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 DATABASES = {
-    'default': dj_database_url.config(default='postgresql://postgres:mSpSEhrpdoLQXtqkvnqNurWsaLcDHgJr@shinkansen.proxy.rlwy.net:43587/railway')
+    'default': dj_database_url.config(default='postgresql://postgres:mSpSEhrpdoLQXtqkvnqNurWsaLcDHgJr@postgres.railway.internal:5432/railway')
 }
 
 # Password validation

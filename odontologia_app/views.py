@@ -39,13 +39,24 @@ def registro(request):
     if request.method == 'POST':
         form = RegistroForm(request.POST)
         if form.is_valid():
-            user = form.save()
-            login(request, user)  
-            return redirect('principal')  
+            try:
+                user = form.save(commit=False)
+                user.email = form.cleaned_data['email']  
+                user.save()  
+                login(request, user)  
+                return redirect('principal')  
+            except IntegrityError:
+                messages.error(request, 'El correo electrónico ya está en uso.')
+            except Exception as e:
+                messages.error(request, f'Ocurrió un error: {str(e)}')
+        else:
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f'{field}: {error}')
     else:
         form = RegistroForm()
     return render(request, 'odontologia_app/registro.html', {'form': form})
-
+    
 @csrf_exempt
 def inicio(request):
     return render(request, 'odontologia_app/inicio.html')

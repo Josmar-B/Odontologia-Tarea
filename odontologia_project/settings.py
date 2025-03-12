@@ -31,7 +31,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
-CSRF_TRUSTED_ORIGINS = ['https://*','https://odontologia-tarea.onrender.com']
+CSRF_TRUSTED_ORIGINS = ['https://*']
 
 # Application definition
 INSTALLED_APPS = [
@@ -79,7 +79,7 @@ WSGI_APPLICATION = 'odontologia_project.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 DATABASES = {
-    'default': dj_database_url.config(default='postgresql://josmar:6NAOqaQkrkksENSefywtrvtbA5VzWOFr@dpg-cv6gv3l6l47c73d88br0-a/doctora')
+    'default': dj_database_url.config(default='postgresql://postgres:mSpSEhrpdoLQXtqkvnqNurWsaLcDHgJr@postgres.railway.internal:5432/railway')
 }
 
 # Password validation

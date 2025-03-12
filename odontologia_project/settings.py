@@ -13,15 +13,8 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 from pathlib import Path
 import os
 
-ALLOWED_HOSTS = ['*']
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
-CSRF_TRUSTED_ORIGINS = [
-'*'
-]
-
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
@@ -32,11 +25,11 @@ SECRET_KEY = 'django-insecure-+q3yd)ft+@^3l473b+0n!t%%m7fuqh&bn=s%9o%j-ual_pm#j0
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+ALLOWED_HOSTS = ['*']
 
-
+CSRF_TRUSTED_ORIGINS = ['*']
 
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -46,26 +39,18 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'odontologia_app',
     'fontawesomefree',
-    'whitenoise.runserver_nostatic'
-
+    'whitenoise.runserver_nostatic',
 ]
 
-STORAGES = {
-    # ...
-    "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
-    },
-}
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    "django.middleware.security.SecurityMiddleware",
-    "whitenoise.middleware.WhiteNoiseMiddleware",
 ]
 
 ROOT_URLCONF = 'odontologia_project.urls'
@@ -73,8 +58,8 @@ ROOT_URLCONF = 'odontologia_project.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'odontologia_app/Templates')],  # Ruta a la carpeta global de templates
-        'APP_DIRS': True,  # Busca templates en las carpetas de las apps
+        'DIRS': [os.path.join(BASE_DIR, 'odontologia_app/Templates')],
+        'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
@@ -85,28 +70,24 @@ TEMPLATES = [
         },
     },
 ]
+
 WSGI_APPLICATION = 'odontologia_project.wsgi.application'
-
-AUTH_USER_MODEL = "odontologia_app.Usuario"
-
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
-LOGIN_REDIRECT_URL = '/principal'
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        "NAME": os.getenv("DB_NAME", "doctora"),
-        "USER": os.getenv("DB_USER", "josmar"),
-        "PASSWORD": os.getenv("DB_PASSWORD", "6NAOqaQkrkksENSefywtrvtbA5VzWOFr"),
-        "HOST": os.getenv("DB_HOST", "dpg-cv6gv3l6l47c73d88br0-a"),
-        "PORT": os.getenv("DB_PORT", "5432"),
+        'NAME': os.getenv("DB_NAME", "doctora"),
+        'USER': os.getenv("DB_USER", "josmar"),
+        'PASSWORD': os.getenv("DB_PASSWORD", "6NAOqaQkrkksENSefywtrvtbA5VzWOFr"),
+        'HOST': os.getenv("DB_HOST", "dpg-cv6gv3l6l47c73d88br0-a"),
+        'PORT': os.getenv("DB_PORT", "5432"),
     }
 }
+
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -122,34 +103,32 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
-
 LANGUAGE_CODE = 'en-us'
-
 TIME_ZONE = 'America/Caracas'
-
 USE_I18N = True
-
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
-
-# settings.py
-
-# Configuración para archivos estáticos
 STATIC_URL = '/static/'
-
-# Directorio donde se almacenan los archivos estáticos
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'odontologia_app/static'),  # Ruta a la carpeta static de tu app
-]
-# Directorio donde se recolectan los archivos estáticos en producción
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'odontologia_app/static')]
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+# WhiteNoise configuration for static files
+STORAGES = {
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
-
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Custom user model
+AUTH_USER_MODEL = "odontologia_app.Usuario"
+
+# Login redirect URL
+LOGIN_REDIRECT_URL = '/principal'

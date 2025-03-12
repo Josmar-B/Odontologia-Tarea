@@ -76,7 +76,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'odontologia_project.wsgi.application'
-postgresql://josmar:6NAOqaQkrkksENSefywtrvtbA5VzWOFr@dpg-cv6gv3l6l47c73d88br0-a/doctora
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 DATABASES = {

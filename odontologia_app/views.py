@@ -7,7 +7,7 @@ from .models import *
 from .forms import *
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
-
+from django.http import JsonResponse
 
 @csrf_exempt
 def principal(request):
@@ -231,14 +231,21 @@ def eliminar_historia_medica(request, historia_id):
 @csrf_exempt
 def crear_representante(request):
     if request.method == 'POST':
-        form = RepresentanteForm(request.POST)
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'Representante creado exitosamente.')
-            return redirect('lista_pacientes')
-        else:
-            messages.error(request, 'Por favor, corrija los errores en el formulario.')
+        cedula = request.POST.get('cedula')
+        nombre = request.POST.get('nombre')
+
+        if not cedula or not nombre:
+            return JsonResponse({'status': 'error', 'message': 'Todos los campos son obligatorios.'}, status=400)
+
+        try:
+            # Verifica si ya existe un representante con la misma cédula
+            if Representante.objects.filter(cedula=cedula).exists():
+                return JsonResponse({'status': 'error', 'message': 'Ya existe un representante con esta cédula.'}, status=400)
+
+            # Crea el representante
+            Representante.objects.create(cedula=cedula, nombre=nombre)
+            return JsonResponse({'status': 'success'})
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
     else:
-        form = RepresentanteForm()
-    
-    return render(request, 'odontologia_app/crear_representante.html', {'form': form})
+        return JsonResponse({'status': 'error', 'message': 'Método no permitido.'}, status=405)

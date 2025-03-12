@@ -45,7 +45,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'odontologia_app',
-    'fontawesomefree'
+    'fontawesomefree',
+    'whitenoise.runserver_nostatic'
 
 ]
 

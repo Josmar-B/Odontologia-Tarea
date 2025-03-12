@@ -80,22 +80,22 @@ def lista_pacientes(request):
 @csrf_exempt
 def crear_paciente(request):
     if request.method == 'POST':
-        datos = {
-            'cedula': request.POST.get('cedula'),
-            'nombre': request.POST.get('nombre'),
-            'cedula_representante': request.POST.get('cedula_representante') or None,
-            'edad': int(request.POST.get('edad')),
-            'telefono': request.POST.get('telefono'),
-            'sexo': request.POST.get('sexo'),
-            'estado_civil': request.POST.get('estado_civil') == 'true',
-            'ocupacion': request.POST.get('ocupacion'),
-        }
-        
-        # Crear un nuevo paciente en la base de datos
-        Paciente.objects.create(**datos)
-        return redirect('lista_pacientes')
-    else:
-        return render(request, 'odontologia_app/crear_paciente.html')
+        try:
+            datos = {
+                'cedula': request.POST.get('cedula'),
+                'nombre': request.POST.get('nombre'),
+                'cedula_representante': request.POST.get('cedula_representante') or None,
+                'edad': int(request.POST.get('edad')),
+                'telefono': request.POST.get('telefono'),
+                'sexo': request.POST.get('sexo'),
+                'estado_civil': request.POST.get('estado_civil') == 'true',
+                'ocupacion': request.POST.get('ocupacion'),
+            }
+            Paciente.objects.create(**datos)
+            return redirect('lista_pacientes')
+        except Exception as e:
+            messages.error(request, f'Ocurrió un error al crear el paciente: {str(e)}')
+    return render(request, 'odontologia_app/crear_paciente.html')
 
 @csrf_exempt
 def editar_paciente(request, id):

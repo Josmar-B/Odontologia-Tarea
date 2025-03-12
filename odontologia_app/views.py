@@ -254,8 +254,13 @@ def crear_representante(request):
 
             # Crear el representante
             representante = Representante.objects.create(cedula=cedula, nombre=nombre)
-            return JsonResponse({'status': 'success', 'cedula': representante.cedula, 'nombre': representante.nombre})
+            return JsonResponse({
+                'status': 'success',
+                'id': representante.id,  # Devolver el ID del representante
+                'cedula': representante.cedula,
+                'nombre': representante.nombre
+            })
         except Exception as e:
             return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
     else:
-        return JsonResponse({'status': 'error', 'message': 'Método no permitido.'}, status=405)
+        return JsonResponse({'status': 'error', 'message': 'Método no permitido.'}, status=405)o no permitido.'}, status=405)

@@ -92,9 +92,11 @@ class Paciente(models.Model):
     ]
 
     id = models.AutoField(primary_key=True, verbose_name="ID del Paciente")
-    cedula_representante = models.CharField(
-        max_length=20, 
+    cedula_representante = models.ForeignKey(
+        Representante,  # Relación con el modelo Representante
+        on_delete=models.CASCADE,
         verbose_name="Cédula del Representante",
+        related_name="pacientes",
         null=True,  # Permite valores nulos
         blank=True   # Permite que el campo esté vacío en formularios
     )
